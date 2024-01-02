@@ -14,6 +14,6 @@ func (h *RegistryInterceptor) BeforeInvoke(invocation operator.Invocation) error
 }
 
 func (h *RegistryInterceptor) AfterInvoke(invocation operator.Invocation, result ...interface{}) error {
-	log.Infof("-----register prometheus------")
+	log.Infof("-----register prometheus------\n")
 	return nil
 }

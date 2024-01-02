@@ -19,6 +19,7 @@ REPODIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))/../../
 
 OUT_DIR = $(REPODIR)/bin
 BINARY = skywalking-go-agent
+VERSION = 0.3.1
 
 SH = sh
 GO = go

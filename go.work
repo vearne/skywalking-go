@@ -23,6 +23,8 @@ use (
 	./plugins/fasthttp
 	./plugins/fiber
 
+	./plugins/prometheus
+
 	./test/benchmark-codebase/consumer
 	./test/benchmark-codebase/provider
 

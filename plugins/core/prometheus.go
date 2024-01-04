@@ -1,7 +1,6 @@
 package core
 
 import (
-	"github.com/apache/skywalking-go/plugins/core/log"
 	"github.com/apache/skywalking-go/plugins/core/operator"
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -24,7 +23,11 @@ func (p *PromWrapper) NewCounterVec(name, help string, labelNames []string) oper
 		p.registry.Register(cv)
 		return NewCounterVecWrapper(cv)
 	} else {
-		log.Errorf("PromWrapper-NewCounterVec, registry is nil")
+		op := operator.GetOperator()
+		if op == nil {
+			return nil
+		}
+		op.Logger().(operator.LogOperator).Error("PromWrapper-NewCounterVec, registry is nil")
 		return nil
 	}
 }

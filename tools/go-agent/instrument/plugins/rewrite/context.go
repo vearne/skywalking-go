@@ -39,7 +39,7 @@ var GenerateCommonPrefix = "skywalking_"
 
 var GenerateMethodPrefix = GenerateCommonPrefix + "enhance_"
 var GenerateVarPrefix = GenerateCommonPrefix + "var_"
-var OperatorDirs = []string{"operator", "log", "tracing", "tools", "metrics"}
+var OperatorDirs = []string{"operator", "log", "tracing", "tools", "metrics", "prom"}
 
 var OperatePrefix = GenerateCommonPrefix + "operator"
 var TypePrefix = OperatePrefix + "Type"

@@ -52,6 +52,12 @@ type Tracer struct {
 	// for all metrics
 	meterMap              *sync.Map
 	meterCollectListeners []func()
+
+	Prom *PromWrapper
+}
+
+func (t *Tracer) PromMetrics() interface{} {
+	return t.Prom
 }
 
 func (t *Tracer) Init(entity *reporter.Entity, rep reporter.Reporter, samp Sampler, logger operator.LogOperator,
@@ -112,6 +118,7 @@ func newTracer() *Tracer {
 		tools:       NewTracerTools(),
 
 		meterMap: &sync.Map{},
+		Prom:     NewPromWrapper(),
 	}
 }
 

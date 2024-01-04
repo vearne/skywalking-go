@@ -15,24 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package prometheus
+package operator
 
-import (
-	"github.com/apache/skywalking-go/plugins/core/log"
-	"github.com/apache/skywalking-go/plugins/core/operator"
-	"github.com/apache/skywalking-go/plugins/core/prom"
-)
-
-type RegistryInterceptor struct {
+type Counter interface {
+	Inc()
+	Add(float64)
 }
 
-func (h *RegistryInterceptor) BeforeInvoke(invocation operator.Invocation) error {
-
-	return nil
+type CounterVec interface {
+	With(labels map[string]string) Counter
 }
 
-func (h *RegistryInterceptor) AfterInvoke(invocation operator.Invocation, result ...interface{}) error {
-	log.Infof("-----register prometheus------\n")
-	prom.SetRegistry(result[0])
-	return nil
+type PromOperator interface {
+	NewCounterVec(name, help string, labelNames []string) CounterVec
+	SetRegistry(registry interface{})
 }

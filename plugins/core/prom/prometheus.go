@@ -15,50 +15,39 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package prometheus
+package prom
 
 import (
-	"embed"
-	"strings"
-
-	"github.com/apache/skywalking-go/plugins/core/instrument"
+	"github.com/apache/skywalking-go/plugins/core/operator"
+	"github.com/apache/skywalking-go/plugins/core/tools"
 )
 
-//go:embed *
-var fs embed.FS
+var storehouse tools.SyncMap
 
-//skywalking:nocopy
-type Instrument struct {
+func init() {
+	storehouse = tools.NewSyncMap()
 }
 
-func NewInstrument() *Instrument {
-	return &Instrument{}
-}
-
-func (i *Instrument) Name() string {
-	return "prometheus"
-}
-
-func (i *Instrument) BasePackage() string {
-	return "github.com/prometheus/client_golang"
-}
-
-func (i *Instrument) VersionChecker(version string) bool {
-	return strings.HasPrefix(version, "v1")
-}
-
-func (i *Instrument) Points() []*instrument.Point {
-	return []*instrument.Point{
-		{
-			PackagePath: "prometheus",
-			At: instrument.NewStaticMethodEnhance("NewRegistry",
-				instrument.WithResultCount(1),
-				instrument.WithResultType(0, "*Registry")),
-			Interceptor: "RegistryInterceptor",
-		},
+func SetRegistry(registry interface{}) {
+	op := operator.GetOperator()
+	if op == nil {
+		return
 	}
+	op.PromMetrics().(operator.PromOperator).SetRegistry(registry)
+	return
 }
 
-func (i *Instrument) FS() *embed.FS {
-	return &fs
+func GetOrNewCounterVec(name, help string, labelNames []string) operator.CounterVec {
+	op := operator.GetOperator()
+	if op == nil {
+		return nil
+	}
+
+	if val, ok := storehouse.Get(name); ok {
+		return val.(operator.CounterVec)
+	}
+
+	cv := op.PromMetrics().(operator.PromOperator).NewCounterVec(name, help, labelNames)
+	storehouse.Put(name, cv)
+	return cv
 }

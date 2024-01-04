@@ -30,6 +30,7 @@ type Operator interface {
 	Entity() interface{}      // Get the entity of the service
 	Metrics() interface{}     // to MetricsOperator
 	LogReporter() interface{} // to LogReporter
+	PromMetrics() interface{} // to PromOperator
 }
 
 type Entity interface {

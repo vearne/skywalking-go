@@ -54,4 +54,7 @@ import (
 	_ "skywalking.apache.org/repo/goapi/collect/language/agent/v3"
 	_ "skywalking.apache.org/repo/goapi/collect/language/profile/v3"
 	_ "skywalking.apache.org/repo/goapi/collect/logging/v3"
+
+	//go:nolint
+	_ "github.com/prometheus/client_golang/prometheus"
 )

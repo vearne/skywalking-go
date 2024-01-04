@@ -13,7 +13,7 @@ func NewPromWrapper() *PromWrapper {
 	return &PromWrapper{registry: nil}
 }
 
-func (p *PromWrapper) NewCounterVec(name, help string, labelNames []string) operator.CounterVec {
+func (p *PromWrapper) NewCounterVec(name, help string, labelNames []string) interface{} {
 	cv := prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: name,
 		Help: help,
@@ -44,6 +44,6 @@ func NewCounterVecWrapper(cv *prometheus.CounterVec) *CounterVecWrapper {
 	return &CounterVecWrapper{cv: cv}
 }
 
-func (c *CounterVecWrapper) With(labels map[string]string) operator.Counter {
+func (c *CounterVecWrapper) With(labels map[string]string) interface{} {
 	return c.cv.With(labels)
 }

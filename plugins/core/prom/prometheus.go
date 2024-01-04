@@ -22,6 +22,11 @@ import (
 	"github.com/apache/skywalking-go/plugins/core/tools"
 )
 
+type Counter interface {
+	Inc()
+	Add(float64)
+}
+
 var storehouse tools.SyncMap
 
 func init() {
@@ -49,5 +54,5 @@ func GetOrNewCounterVec(name, help string, labelNames []string) operator.Counter
 
 	cv := op.PromMetrics().(operator.PromOperator).NewCounterVec(name, help, labelNames)
 	storehouse.Put(name, cv)
-	return cv
+	return cv.(operator.CounterVec)
 }

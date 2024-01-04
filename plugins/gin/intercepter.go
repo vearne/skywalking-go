@@ -69,7 +69,7 @@ func (h *HTTPInterceptor) AfterInvoke(invocation operator.Invocation, result ...
 		"method": context.Request.Method,
 		"path":   context.Request.URL.Path,
 		"status": fmt.Sprintf("%d", context.Writer.Status()),
-	}).Inc()
+	}).(prom.Counter).Inc()
 
 	return nil
 }

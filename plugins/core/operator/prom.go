@@ -17,16 +17,11 @@
 
 package operator
 
-type Counter interface {
-	Inc()
-	Add(float64)
-}
-
 type CounterVec interface {
-	With(labels map[string]string) Counter
+	With(labels map[string]string) interface{}
 }
 
 type PromOperator interface {
-	NewCounterVec(name, help string, labelNames []string) CounterVec
+	NewCounterVec(name, help string, labelNames []string) interface{}
 	SetRegistry(registry interface{})
 }

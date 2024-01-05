@@ -1,39 +1,49 @@
 package core
 
 import (
-	"github.com/apache/skywalking-go/plugins/core/operator"
 	"github.com/prometheus/client_golang/prometheus"
+	"log"
+	"sync"
 )
 
 type PromWrapper struct {
-	registry *prometheus.Registry
+	registry   *prometheus.Registry
+	storehouse *sync.Map
 }
 
 func NewPromWrapper() *PromWrapper {
-	return &PromWrapper{registry: nil}
+	return &PromWrapper{registry: nil, storehouse: &sync.Map{}}
 }
 
 func (p *PromWrapper) NewCounterVec(name, help string, labelNames []string) interface{} {
+	val, ok := p.storehouse.Load(name)
+	if ok {
+		return val
+	}
+
 	cv := prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: name,
 		Help: help,
 	}, labelNames)
 
 	if p.registry != nil {
-		p.registry.Register(cv)
-		return NewCounterVecWrapper(cv)
-	} else {
-		op := operator.GetOperator()
-		if op == nil {
-			return nil
+		err := p.registry.Register(cv)
+		if err != nil {
+			log.Printf("[----1----]registry.Register, error:%v\n", err)
 		}
-		op.Logger().(operator.LogOperator).Error("PromWrapper-NewCounterVec, registry is nil")
+		w := NewCounterVecWrapper(cv)
+		p.storehouse.Store(name, w)
+		return w
+	} else {
+		log.Println("[----2----]PromWrapper-NewCounterVec, registry is nil")
 		return nil
 	}
 }
 
 func (p *PromWrapper) SetRegistry(registry interface{}) {
-	p.registry = registry.(*prometheus.Registry)
+	if p.registry == nil {
+		p.registry = registry.(*prometheus.Registry)
+	}
 }
 
 type CounterVecWrapper struct {

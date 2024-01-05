@@ -21,6 +21,7 @@ import (
 	"github.com/apache/skywalking-go/plugins/core/log"
 	"github.com/apache/skywalking-go/plugins/core/operator"
 	"github.com/apache/skywalking-go/plugins/core/prom"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 type RegistryInterceptor struct {
@@ -32,7 +33,7 @@ func (h *RegistryInterceptor) BeforeInvoke(invocation operator.Invocation) error
 }
 
 func (h *RegistryInterceptor) AfterInvoke(invocation operator.Invocation, result ...interface{}) error {
-	log.Infof("-----register prometheus------\n")
-	prom.SetRegistry(result[0])
+	log.Infof("-----register prometheus------, %p\n", prometheus.DefaultRegisterer)
+	prom.SetRegistry(prometheus.DefaultRegisterer)
 	return nil
 }

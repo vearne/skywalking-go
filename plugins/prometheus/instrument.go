@@ -50,10 +50,10 @@ func (i *Instrument) VersionChecker(version string) bool {
 func (i *Instrument) Points() []*instrument.Point {
 	return []*instrument.Point{
 		{
-			PackagePath: "prometheus",
-			At: instrument.NewStaticMethodEnhance("NewRegistry",
+			PackagePath: "prometheus/promhttp",
+			At: instrument.NewStaticMethodEnhance("Handler",
 				instrument.WithResultCount(1),
-				instrument.WithResultType(0, "*Registry")),
+				instrument.WithResultType(0, "http.Handler")),
 			Interceptor: "RegistryInterceptor",
 		},
 	}

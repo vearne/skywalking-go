@@ -19,18 +19,11 @@ package prom
 
 import (
 	"github.com/apache/skywalking-go/plugins/core/operator"
-	"github.com/apache/skywalking-go/plugins/core/tools"
 )
 
 type Counter interface {
 	Inc()
 	Add(float64)
-}
-
-var storehouse tools.SyncMap
-
-func init() {
-	storehouse = tools.NewSyncMap()
 }
 
 func SetRegistry(registry interface{}) {
@@ -48,11 +41,6 @@ func GetOrNewCounterVec(name, help string, labelNames []string) operator.Counter
 		return nil
 	}
 
-	if val, ok := storehouse.Get(name); ok {
-		return val.(operator.CounterVec)
-	}
-
 	cv := op.PromMetrics().(operator.PromOperator).NewCounterVec(name, help, labelNames)
-	storehouse.Put(name, cv)
 	return cv.(operator.CounterVec)
 }

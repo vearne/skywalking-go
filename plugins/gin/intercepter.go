@@ -22,6 +22,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/apache/skywalking-go/plugins/core/log"
 	"github.com/apache/skywalking-go/plugins/core/operator"
 	"github.com/apache/skywalking-go/plugins/core/prom"
 	"github.com/apache/skywalking-go/plugins/core/tracing"
@@ -59,6 +60,10 @@ func (h *HTTPInterceptor) AfterInvoke(invocation operator.Invocation, result ...
 	}
 	span.End()
 
+	// add log
+	log.Infof("url:%v", context.Request.URL.Path)
+
+	// add metrics
 	httpReqTotal := prom.GetOrNewCounterVec(
 		"gin_requests_total",
 		"Total number of gin HTTP requests made",

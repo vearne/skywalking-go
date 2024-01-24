@@ -42,6 +42,7 @@ import (
 	_ "github.com/apache/skywalking-go/agent/core/operator"
 	_ "github.com/apache/skywalking-go/agent/core/tracing"
 	_ "github.com/apache/skywalking-go/agent/reporter"
+	_ "github.com/apache/skywalking-go/discover/consul"
 	_ "github.com/apache/skywalking-go/log"
 
 	//go:nolint
